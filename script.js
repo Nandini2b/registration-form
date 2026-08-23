@@ -1,1049 +1,435 @@
 const form = document.getElementById("registrationForm");
-
-const message = document.getElementById("message");
-
 const submitBtn = document.getElementById("submitBtn");
-
-
-/*
-=========================================
-PASTE YOUR GOOGLE APPS SCRIPT WEB APP URL
-=========================================
-*/
-
-const scriptURL =
-    "https://script.google.com/macros/library/d/1MkPE-aSPFfKzs1Axe4-c-Ums9slPK_lfPeo-6tF0ZYyjBNtt5zY8zsh0/3";
-
-
-/*
-=========================================
-SUBJECT LISTS
-=========================================
-*/
+const progressFill = document.getElementById("progressFill");
+const subjectSection = document.getElementById("subjectSection");
+const toast = document.getElementById("toast");
+const toastMessage = document.getElementById("toastMessage");
+const formContent = document.querySelector(".form-content");
+const successPanel = document.getElementById("successPanel");
+const registerNewStudent = document.getElementById("registerNewStudent");
 
 const scienceSubjects = [
-    "B.Sc. Chemistry",
-    "B.Sc. Biochemistry",
-    "B.Sc. Biotechnology",
-    "B.Sc. Botany",
-    "B.Sc. Zoology",
-    "B.Sc. Physics",
-    "B.Sc. Mathematics",
-    "B.Sc. Electronics",
-    "B.Sc. Computer Science"
+    "B.Sc. Chemistry", "B.Sc. Biochemistry", "B.Sc. Biotechnology",
+    "B.Sc. Botany", "B.Sc. Zoology", "B.Sc. Physics",
+    "B.Sc. Mathematics", "B.Sc. Electronics", "B.Sc. Computer Science"
 ];
-
 
 const artsSubjects = [
-    "Political Science",
-    "History",
-    "Geography",
-    "Economics",
-    "Sociology",
-    "Psychology",
-    "English / Hindi / Marathi",
-    "Philosophy"
+    "B.A. English Literature", "B.A. Hindi Literature", "B.A. Economics",
+    "B.A. History", "B.A. Philosophy", "B.A. Political Science",
+    "B.A. Physiology", "B.A. Sociology"
 ];
 
-
-let currentSubjects = [];
-
-
-/*
-=========================================
-ELEMENTS
-=========================================
-*/
-
 const stream = document.getElementById("stream");
+const dsc1 = document.getElementById("dsc1");
+const dsc2 = document.getElementById("dsc2");
+const dsc3 = document.getElementById("dsc3");
+const photo = document.getElementById("photo");
+const fileUpload = document.getElementById("fileUpload");
+const fileUploadLabel = document.getElementById("fileUploadLabel");
+const photoPreview = document.getElementById("photoPreview");
+const previewImage = document.getElementById("previewImage");
+const removePhoto = document.getElementById("removePhoto");
+const changePhoto = document.getElementById("changePhoto");
 
-const subjectSection =
-    document.getElementById("subjectSection");
+const requiredFields = [
+    { id: "name", validator: v => v.trim().length >= 2, message: "Name must be at least 2 characters" },
+    { id: "email", validator: v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v), message: "Enter a valid email address" },
+    { id: "mobile", validator: v => /^[6-9]\d{9}$/.test(v), message: "Enter a valid 10-digit mobile number" },
+    { id: "apaar", validator: v => v.trim().length > 0, message: "APAAR ID is required" },
+    { id: "dob", validator: v => { if (!v) return false; const age = new Date().getFullYear() - new Date(v).getFullYear(); return age >= 14; }, message: "Must be at least 14 years old" },
+    { id: "aadhaar", validator: v => /^\d{12}$/.test(v), message: "Enter a valid 12-digit Aadhaar number" },
+    { id: "stream", validator: v => v !== "", message: "Please select a stream" },
+    { id: "nomineeName", validator: v => v.trim().length >= 2, message: "Nominee name is required" },
+    { id: "nomineeDob", validator: v => v !== "", message: "Nominee date of birth is required" },
+    { id: "nomineeMobile", validator: v => /^[6-9]\d{9}$/.test(v), message: "Enter a valid 10-digit mobile number" },
+    { id: "nomineeAadhaar", validator: v => /^\d{12}$/.test(v), message: "Enter a valid 12-digit Aadhaar number" }
+];
 
-const dsc1 =
-    document.getElementById("dsc1");
-
-const dsc2 =
-    document.getElementById("dsc2");
-
-const dsc3 =
-    document.getElementById("dsc3");
-
-const photoInput =
-    document.getElementById("photo");
-
-
-/*
-=========================================
-STREAM CHANGE
-=========================================
-*/
-
-stream.addEventListener("change", function () {
-
-    if (stream.value === "Science") {
-
-        currentSubjects = scienceSubjects;
-
-        subjectSection.classList.remove("hidden");
-
-        initSubjects();
-
-    }
-
-    else if (stream.value === "Arts") {
-
-        currentSubjects = artsSubjects;
-
-        subjectSection.classList.remove("hidden");
-
-        initSubjects();
-
-    }
-
-    else {
-
-        subjectSection.classList.add("hidden");
-
-        currentSubjects = [];
-
-        dsc1.innerHTML = "";
-        dsc2.innerHTML = "";
-        dsc3.innerHTML = "";
-    }
-
-});
-
-
-/*
-=========================================
-INITIALIZE SUBJECT DROPDOWNS
-=========================================
-*/
-
-function initSubjects() {
-
-    [dsc1, dsc2, dsc3].forEach(
-        (select, index) => {
-
-            select.innerHTML = "";
-
-            addOption(
-                select,
-                "",
-                `-- Select Subject ${index + 1} --`
-            );
-
-            currentSubjects.forEach(subject => {
-
-                addOption(
-                    select,
-                    subject,
-                    subject
-                );
-
-            });
-
-        }
-    );
+function showToast(message, type = "info") {
+    toastMessage.textContent = message;
+    toast.className = `toast ${type} visible`;
+    toast.setAttribute("aria-hidden", "false");
+    setTimeout(() => {
+        toast.classList.remove("visible");
+        toast.setAttribute("aria-hidden", "true");
+    }, 4000);
 }
 
+function updateProgress() {
+    const allInputs = form.querySelectorAll("input[required], select[required]");
+    let filled = 0;
+    allInputs.forEach(input => {
+        if (input.type === "file") {
+            if (input.files.length > 0) filled++;
+        } else if (input.value.trim() !== "") {
+            filled++;
+        }
+    });
+    const percentage = Math.round((filled / allInputs.length) * 100);
+    progressFill.style.width = `${percentage}%`;
+    progressFill.parentElement.setAttribute("aria-valuenow", percentage);
+}
 
-function addOption(
-    select,
-    value,
-    text
-) {
+function validateField(field) {
+    const wrapper = document.getElementById(`${field.id}Wrapper`);
+    const errorEl = document.getElementById(`${field.id}Error`);
+    const validation = requiredFields.find(f => f.id === field.id);
 
-    const option =
-        document.createElement("option");
+    if (!validation) return true;
 
-    option.value = value;
+    const isValid = validation.validator(field.value);
 
+    field.classList.remove("valid", "invalid", "error");
+    wrapper?.classList.remove("focused");
+
+    if (field.value.trim() === "") {
+        field.classList.remove("valid", "invalid");
+        errorEl.textContent = "";
+        errorEl.classList.remove("visible");
+        return false;
+    }
+
+    if (isValid) {
+        field.classList.add("valid");
+        field.classList.remove("invalid");
+        errorEl.textContent = "";
+        errorEl.classList.remove("visible");
+        return true;
+    } else {
+        field.classList.add("invalid", "error");
+        field.classList.remove("valid");
+        errorEl.textContent = validation.message;
+        errorEl.classList.add("visible");
+        setTimeout(() => field.classList.remove("error"), 400);
+        return false;
+    }
+}
+
+function validateDSCFields() {
+    if (!subjectSection.classList.contains("visible")) return true;
+
+    let allValid = true;
+    [dsc1, dsc2, dsc3].forEach(select => {
+        const isValid = validateField(select);
+        if (!isValid) allValid = false;
+    });
+
+    const values = [dsc1.value, dsc2.value, dsc3.value].filter(v => v);
+    const uniqueValues = new Set(values);
+    if (values.length !== uniqueValues.size) {
+        [dsc1, dsc2, dsc3].forEach(select => {
+            if (values.indexOf(select.value) !== values.lastIndexOf(select.value)) {
+                const wrapper = document.getElementById(`${select.id}Wrapper`);
+                const errorEl = document.getElementById(`${select.id}Error`);
+                select.classList.add("invalid", "error");
+                select.classList.remove("valid");
+                errorEl.textContent = "Each subject must be unique";
+                errorEl.classList.add("visible");
+                setTimeout(() => select.classList.remove("error"), 400);
+                allValid = false;
+            }
+        });
+    }
+
+    return allValid;
+}
+
+function checkFormValidity() {
+    let allValid = true;
+    requiredFields.forEach(field => {
+        const input = document.getElementById(field.id);
+        if (input && !validateField(input)) allValid = false;
+    });
+    if (!validateDSCFields()) allValid = false;
+
+    const photoValid = photo.files.length > 0;
+    const photoWrapper = document.getElementById("photoWrapper");
+    const photoError = document.getElementById("photoError");
+    if (!photoValid) {
+        photoWrapper?.classList.add("focused");
+        photoError.textContent = "Please upload a photo";
+        photoError.classList.add("visible");
+        allValid = false;
+    } else {
+        photoError.textContent = "";
+        photoError.classList.remove("visible");
+    }
+
+    submitBtn.disabled = !allValid;
+    return allValid;
+}
+
+function addDefaultOption(select, text) {
+    const option = document.createElement("option");
+    option.value = "";
     option.textContent = text;
-
     select.appendChild(option);
 }
 
-
-/*
-=========================================
-PREVENT DUPLICATE SUBJECTS
-=========================================
-*/
-
-function updateSubjects() {
-
-    const values = [
-        dsc1.value,
-        dsc2.value,
-        dsc3.value
-    ];
-
-    rebuildDropdown(
-        dsc1,
-        values[0],
-        [values[1], values[2]],
-        1
-    );
-
-    rebuildDropdown(
-        dsc2,
-        values[1],
-        [values[0], values[2]],
-        2
-    );
-
-    rebuildDropdown(
-        dsc3,
-        values[2],
-        [values[0], values[1]],
-        3
-    );
+function addOption(select, subject) {
+    const option = document.createElement("option");
+    option.value = subject;
+    option.textContent = subject;
+    select.appendChild(option);
 }
 
-
-function rebuildDropdown(
-    select,
-    current,
-    exclude,
-    index
-) {
-
-    select.innerHTML = "";
-
-    addOption(
-        select,
-        "",
-        `-- Select Subject ${index} --`
-    );
-
-    currentSubjects.forEach(subject => {
-
-        if (!exclude.includes(subject)) {
-
-            addOption(
-                select,
-                subject,
-                subject
-            );
-
-        }
-
+function loadSubjects(subjects) {
+    [dsc1, dsc2, dsc3].forEach(select => {
+        select.innerHTML = "";
+        addDefaultOption(select, `-- Select ${select.id.toUpperCase()} --`);
     });
 
-    select.value = current;
+    subjects.forEach(subject => {
+        addOption(dsc1, subject);
+        addOption(dsc2, subject);
+        addOption(dsc3, subject);
+    });
 }
 
+function updateSubjects() {
+    const selected1 = dsc1.value;
+    const selected2 = dsc2.value;
+    const selected3 = dsc3.value;
 
-[dsc1, dsc2, dsc3].forEach(
-    select => {
+    const subjects = stream.value === "Arts" ? artsSubjects : scienceSubjects;
 
-        select.addEventListener(
-            "change",
-            updateSubjects
-        );
+    [dsc1, dsc2, dsc3].forEach(select => {
+        const currentValue = select.value;
+        const others = [dsc1, dsc2, dsc3].filter(s => s !== select).map(s => s.value);
 
-    }
-);
+        select.innerHTML = "";
+        addDefaultOption(select, `-- Select ${select.id.toUpperCase()} --`);
 
+        subjects.forEach(subject => {
+            if (!others.includes(subject)) {
+                addOption(select, subject);
+            }
+        });
 
-/*
-=========================================
-VALIDATION
-=========================================
-*/
+        select.value = currentValue;
+    });
 
-const validators = {
-
-    name: value =>
-        value.trim().length >= 2 ||
-        "Enter your full name",
-
-    email: value =>
-        /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) ||
-        "Enter a valid email",
-
-    mobile: value =>
-        /^[6-9]\d{9}$/.test(value) ||
-        "Enter a valid 10-digit mobile",
-
-    rollNo: value =>
-        value.trim().length >= 1 ||
-        "Enter your roll number",
-
-    apaar: value =>
-        /^\d{12}$/.test(value) ||
-        "APAAR ID must be 12 digits",
-
-    dob: value => {
-
-        if (!value) {
-
-            return "Select your date of birth";
-        }
-
-        const date =
-            new Date(value);
-
-        const minDate =
-            new Date("1980-01-01");
-
-        const maxDate =
-            new Date();
-
-        if (
-            date < minDate ||
-            date > maxDate
-        ) {
-
-            return "DOB must be between 1980 and today";
-        }
-
-        return true;
-    },
-
-    aadhaar: value =>
-        /^\d{12}$/.test(value) ||
-        "Aadhaar must be 12 digits",
-
-    stream: value =>
-        value !== "" ||
-        "Select a stream",
-
-    nomineeName: value =>
-        value.trim().length >= 2 ||
-        "Enter nominee name",
-
-    nomineeDob: value =>
-        value !== "" ||
-        "Select nominee DOB",
-
-    nomineeMobile: value =>
-        /^[6-9]\d{9}$/.test(value) ||
-        "Enter valid 10-digit mobile",
-
-    nomineeAadhaar: value =>
-        /^\d{12}$/.test(value) ||
-        "Aadhaar must be 12 digits"
-
-};
-
-
-/*
-=========================================
-SHOW ERROR
-=========================================
-*/
-
-function showError(
-    fieldName,
-    errorMessage
-) {
-
-    const errorElement =
-        document.querySelector(
-            `.err[data-for="${fieldName}"]`
-        );
-
-    const input =
-        document.getElementById(fieldName);
-
-
-    if (errorElement) {
-
-        errorElement.textContent =
-            errorMessage || "";
-
-    }
-
-
-    if (input) {
-
-        input.classList.toggle(
-            "invalid",
-            !!errorMessage
-        );
-
-    }
-
+    validateDSCFields();
+    checkFormValidity();
 }
 
-
-/*
-=========================================
-VALIDATE FIELD
-=========================================
-*/
-
-function validateField(
-    name,
-    value
-) {
-
-    const rule =
-        validators[name];
-
-
-    if (!rule) {
-
-        return true;
-    }
-
-
-    const result =
-        rule(value);
-
-
-    if (result === true) {
-
-        showError(name, "");
-
-        return true;
-    }
-
-
-    showError(
-        name,
-        result
-    );
-
-    return false;
+function clearSubjects() {
+    [dsc1, dsc2, dsc3].forEach(select => select.innerHTML = "");
 }
 
-
-/*
-=========================================
-LIVE VALIDATION
-=========================================
-*/
-
-Object.keys(validators).forEach(
-    name => {
-
-        const element =
-            document.getElementById(name);
-
-
-        if (element) {
-
-            element.addEventListener(
-                "blur",
-                () => {
-
-                    validateField(
-                        name,
-                        element.value
-                    );
-
-                }
-            );
-
-        }
-
+stream.addEventListener("change", function () {
+    clearSubjects();
+    if (stream.value === "Science" || stream.value === "Arts") {
+        subjectSection.classList.add("visible");
+        subjectSection.setAttribute("aria-hidden", "false");
+        loadSubjects(stream.value === "Arts" ? artsSubjects : scienceSubjects);
+    } else {
+        subjectSection.classList.remove("visible");
+        subjectSection.setAttribute("aria-hidden", "true");
     }
-);
+    checkFormValidity();
+    updateProgress();
+});
 
+[dsc1, dsc2, dsc3].forEach(select => {
+    select.addEventListener("change", updateSubjects);
+});
 
-/*
-=========================================
-DIGIT-ONLY FIELDS
-=========================================
-*/
+function convertPhotoToBase64(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = () => reject(new Error("Could not read photo"));
+        reader.readAsDataURL(file);
+    });
+}
 
-[
-    "mobile",
-    "aadhaar",
-    "apaar",
-    "nomineeMobile",
-    "nomineeAadhaar"
-].forEach(id => {
+photo.addEventListener("change", function () {
+    const file = this.files[0];
+    if (file) {
+        if (!file.type.startsWith("image/")) {
+            showToast("Please select an image file", "error");
+            this.value = "";
+            return;
+        }
+        if (file.size > 5 * 1024 * 1024) {
+            showToast("File size must be less than 5MB", "error");
+            this.value = "";
+            return;
+        }
+        const reader = new FileReader();
+        reader.onload = e => {
+            previewImage.src = e.target.result;
+            photoPreview.classList.add("visible");
+            fileUploadLabel.style.display = "none";
+        };
+        reader.readAsDataURL(file);
+        checkFormValidity();
+        updateProgress();
+    }
+});
 
-    const element =
-        document.getElementById(id);
+removePhoto.addEventListener("click", () => {
+    photo.value = "";
+    photoPreview.classList.remove("visible");
+    fileUploadLabel.style.display = "flex";
+    checkFormValidity();
+    updateProgress();
+});
 
+changePhoto.addEventListener("click", () => photo.click());
 
-    if (!element) {
+fileUpload.addEventListener("dragover", e => {
+    e.preventDefault();
+    fileUpload.classList.add("drag-over");
+});
 
+fileUpload.addEventListener("dragleave", e => {
+    e.preventDefault();
+    fileUpload.classList.remove("drag-over");
+});
+
+fileUpload.addEventListener("drop", e => {
+    e.preventDefault();
+    fileUpload.classList.remove("drag-over");
+    if (e.dataTransfer.files.length) {
+        photo.files = e.dataTransfer.files;
+        photo.dispatchEvent(new Event("change"));
+    }
+});
+
+form.querySelectorAll("input, select").forEach(input => {
+    const wrapper = document.getElementById(`${input.id}Wrapper`);
+    input.addEventListener("focus", () => wrapper?.classList.add("focused"));
+    input.addEventListener("blur", () => {
+        wrapper?.classList.remove("focused");
+        validateField(input);
+        validateDSCFields();
+        checkFormValidity();
+        updateProgress();
+    });
+    input.addEventListener("input", () => {
+        if (input.classList.contains("invalid")) {
+            validateField(input);
+            checkFormValidity();
+        }
+        updateProgress();
+    });
+    input.addEventListener("change", () => {
+        validateField(input);
+        validateDSCFields();
+        checkFormValidity();
+        updateProgress();
+    });
+});
+
+form.addEventListener("submit", async function (event) {
+    event.preventDefault();
+
+    if (!checkFormValidity()) {
+        const firstInvalid = form.querySelector(".invalid, .error");
+        firstInvalid?.focus();
+        firstInvalid?.scrollIntoView({ behavior: "smooth", block: "center" });
+        showToast("Please fix the errors above", "error");
         return;
     }
 
+    submitBtn.classList.add("loading");
+    submitBtn.disabled = true;
 
-    element.addEventListener(
-        "input",
-        () => {
+    try {
+        const formData = new FormData(form);
+        const photoFile = photo.files[0];
+        const photoBase64 = await convertPhotoToBase64(photoFile);
 
-            element.value =
-                element.value.replace(
-                    /\D/g,
-                    ""
-                );
+        const data = {
+            name: formData.get("name"),
+            email: formData.get("email"),
+            mobile: formData.get("mobile"),
+            apaar: formData.get("apaar"),
+            dob: formData.get("dob"),
+            aadhaar: formData.get("aadhaar"),
+            stream: formData.get("stream"),
+            dsc1: formData.get("dsc1"),
+            dsc2: formData.get("dsc2"),
+            dsc3: formData.get("dsc3"),
+            nomineeName: formData.get("nomineeName"),
+            nomineeDob: formData.get("nomineeDob"),
+            nomineeMobile: formData.get("nomineeMobile"),
+            nomineeAadhaar: formData.get("nomineeAadhaar"),
+            photoName: photoFile.name,
+            photoType: photoFile.type,
+            photoBase64: photoBase64
+        };
 
-        }
-    );
+        const response = await fetch("/api/register", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data)
+        });
 
+        if (!response.ok) throw new Error("Registration proxy request failed");
+
+        showToast("Registration submitted successfully!", "success");
+
+        form.reset();
+        subjectSection.classList.remove("visible");
+        subjectSection.setAttribute("aria-hidden", "true");
+        photoPreview.classList.remove("visible");
+        fileUploadLabel.style.display = "flex";
+        clearSubjects();
+        progressFill.style.width = "0%";
+        progressFill.parentElement.setAttribute("aria-valuenow", "0");
+
+        formContent.classList.add("hidden");
+        successPanel.classList.add("visible");
+        successPanel.setAttribute("aria-hidden", "false");
+        registerNewStudent.focus();
+
+        form.querySelectorAll("input, select").forEach(input => {
+            input.classList.remove("valid", "invalid");
+        });
+
+    } catch (error) {
+        console.error("Submission error:", error);
+        showToast("There was a problem submitting the form. Please try again.", "error");
+    } finally {
+        submitBtn.classList.remove("loading");
+        checkFormValidity();
+    }
 });
 
+registerNewStudent.addEventListener("click", () => {
+    successPanel.classList.remove("visible");
+    successPanel.setAttribute("aria-hidden", "true");
+    formContent.classList.remove("hidden");
+    form.reset();
+    subjectSection.classList.remove("visible");
+    subjectSection.setAttribute("aria-hidden", "true");
+    photoPreview.classList.remove("visible");
+    fileUploadLabel.style.display = "flex";
+    clearSubjects();
+    progressFill.style.width = "0%";
+    progressFill.parentElement.setAttribute("aria-valuenow", "0");
+    form.querySelectorAll("input, select").forEach(input => input.classList.remove("valid", "invalid", "error"));
+    formContent.scrollIntoView({ behavior: "smooth", block: "start" });
+    checkFormValidity();
+});
 
-/*
-=========================================
-PHOTO COMPRESSION
-=========================================
-*/
+async function init() {
+    const maxDate = new Date();
+    maxDate.setFullYear(maxDate.getFullYear() - 14);
+    document.getElementById("dob").max = maxDate.toISOString().split("T")[0];
+    document.getElementById("nomineeDob").max = new Date().toISOString().split("T")[0];
 
-async function compressImage(
-    file,
-    maxSizeBytes = 1024 * 1024
-) {
+    form.querySelectorAll("input, select").forEach(input => {
+        input.addEventListener("input", updateProgress);
+        input.addEventListener("change", updateProgress);
+    });
 
-    return new Promise(
-        (resolve, reject) => {
-
-            if (!file.type.startsWith("image/")) {
-
-                reject(
-                    new Error("Not an image")
-                );
-
-                return;
-            }
-
-
-            const image =
-                new Image();
-
-            const reader =
-                new FileReader();
-
-
-            reader.onload = event => {
-
-                image.src =
-                    event.target.result;
-
-            };
-
-
-            reader.onerror = () => {
-
-                reject(
-                    new Error(
-                        "Failed to read file"
-                    )
-                );
-
-            };
-
-
-            image.onload = () => {
-
-                const canvas =
-                    document.createElement(
-                        "canvas"
-                    );
-
-
-                let width =
-                    image.width;
-
-                let height =
-                    image.height;
-
-
-                const maxDimension = 1200;
-
-
-                if (
-                    width > maxDimension ||
-                    height > maxDimension
-                ) {
-
-                    const scale =
-                        Math.min(
-                            maxDimension / width,
-                            maxDimension / height
-                        );
-
-                    width =
-                        Math.round(
-                            width * scale
-                        );
-
-                    height =
-                        Math.round(
-                            height * scale
-                        );
-                }
-
-
-                canvas.width =
-                    width;
-
-                canvas.height =
-                    height;
-
-
-                const context =
-                    canvas.getContext("2d");
-
-
-                context.drawImage(
-                    image,
-                    0,
-                    0,
-                    width,
-                    height
-                );
-
-
-                let quality = 0.9;
-
-
-                function tryCompress() {
-
-                    const dataUrl =
-                        canvas.toDataURL(
-                            "image/jpeg",
-                            quality
-                        );
-
-
-                    const base64Length =
-                        dataUrl.length -
-                        "data:image/jpeg;base64,"
-                            .length;
-
-
-                    const sizeBytes =
-                        Math.ceil(
-                            base64Length * 3 / 4
-                        );
-
-
-                    if (
-                        sizeBytes <=
-                            maxSizeBytes ||
-                        quality <= 0.3
-                    ) {
-
-                        resolve({
-                            dataUrl,
-                            sizeBytes
-                        });
-
-                        return;
-                    }
-
-
-                    quality -= 0.1;
-
-                    tryCompress();
-                }
-
-
-                tryCompress();
-            };
-
-
-            image.onerror = () => {
-
-                reject(
-                    new Error(
-                        "Invalid image file"
-                    )
-                );
-
-            };
-
-
-            reader.readAsDataURL(file);
-        }
-    );
+    updateProgress();
+    checkFormValidity();
 }
 
-
-/*
-=========================================
-FULL VALIDATION
-=========================================
-*/
-
-function validateAll() {
-
-    let valid = true;
-
-
-    const formData =
-        new FormData(form);
-
-
-    for (
-        const fieldName of
-        Object.keys(validators)
-    ) {
-
-        const value =
-            formData.get(fieldName) || "";
-
-
-        if (
-            !validateField(
-                fieldName,
-                value
-            )
-        ) {
-
-            valid = false;
-
-        }
-
-    }
-
-
-    /*
-    Subject validation
-    */
-
-    if (
-        stream.value === "Science" ||
-        stream.value === "Arts"
-    ) {
-
-        const subjects = [
-            dsc1.value,
-            dsc2.value,
-            dsc3.value
-        ];
-
-
-        const subjectError =
-            document.querySelector(
-                '.err[data-for="subjects"]'
-            );
-
-
-        if (
-            subjects.some(
-                subject => !subject
-            )
-        ) {
-
-            if (subjectError) {
-
-                subjectError.textContent =
-                    "Select all three subjects";
-            }
-
-            valid = false;
-
-        }
-
-        else if (
-            new Set(subjects).size !== 3
-        ) {
-
-            if (subjectError) {
-
-                subjectError.textContent =
-                    "Subjects must be unique";
-            }
-
-            valid = false;
-
-        }
-
-        else {
-
-            if (subjectError) {
-
-                subjectError.textContent =
-                    "";
-            }
-
-        }
-
-    }
-
-
-    /*
-    Photo validation
-    */
-
-    const photo =
-        photoInput.files[0];
-
-
-    if (!photo) {
-
-        showError(
-            "photo",
-            "Please upload a photo"
-        );
-
-        valid = false;
-
-    }
-
-    else if (
-        !photo.type.startsWith("image/")
-    ) {
-
-        showError(
-            "photo",
-            "File must be an image"
-        );
-
-        valid = false;
-
-    }
-
-    else {
-
-        showError(
-            "photo",
-            ""
-        );
-
-    }
-
-
-    return valid;
-}
-
-
-/*
-=========================================
-SUBMIT FORM
-=========================================
-*/
-
-form.addEventListener(
-    "submit",
-    async function (event) {
-
-        event.preventDefault();
-
-
-        message.textContent = "";
-
-        message.style.color = "";
-
-
-        /*
-        Check URL
-        */
-
-        if (
-            !scriptURL ||
-            scriptURL.includes(
-                "PASTE_YOUR"
-            )
-        ) {
-
-            message.textContent =
-                "Apps Script URL is not configured.";
-
-            message.style.color =
-                "#ff6b70";
-
-            return;
-        }
-
-
-        /*
-        Validation
-        */
-
-        if (!validateAll()) {
-
-            message.textContent =
-                "Please fix the errors above.";
-
-            message.style.color =
-                "#ff6b70";
-
-            return;
-        }
-
-
-        submitBtn.disabled = true;
-
-        submitBtn.textContent =
-            "Submitting...";
-
-
-        message.textContent =
-            "Compressing photo...";
-
-        message.style.color =
-            "#8b93a7";
-
-
-        try {
-
-            /*
-            Get photo
-            */
-
-            const file =
-                photoInput.files[0];
-
-
-            /*
-            Compress photo
-            */
-
-            const {
-                dataUrl,
-                sizeBytes
-            } =
-                await compressImage(
-                    file,
-                    1024 * 1024
-                );
-
-
-            console.log(
-                "Compressed photo:",
-                (sizeBytes / 1024).toFixed(1),
-                "KB"
-            );
-
-
-            /*
-            Create FormData
-            */
-
-            const formData =
-                new FormData(form);
-
-
-            /*
-            Remove actual file
-            */
-
-            formData.delete("photo");
-
-
-            /*
-            Add Base64 photo
-            */
-
-            formData.append(
-                "photoBase64",
-                dataUrl
-            );
-
-
-            formData.append(
-                "photoName",
-                file.name
-            );
-
-
-            formData.append(
-                "photoType",
-                "image/jpeg"
-            );
-
-
-            message.textContent =
-                "Submitting...";
-
-
-            /*
-            Send data
-            */
-
-            await fetch(
-                scriptURL,
-                {
-                    method: "POST",
-                    mode: "no-cors",
-                    body: formData
-                }
-            );
-
-
-            /*
-            Success
-            */
-
-            message.textContent =
-                "Registration submitted successfully!";
-
-            message.style.color =
-                "#3ddc84";
-
-
-            /*
-            Reset form
-            */
-
-            form.reset();
-
-
-            subjectSection.classList.add(
-                "hidden"
-            );
-
-
-            currentSubjects = [];
-
-
-            dsc1.innerHTML = "";
-            dsc2.innerHTML = "";
-            dsc3.innerHTML = "";
-
-
-            document
-                .querySelectorAll(".err")
-                .forEach(element => {
-
-                    element.textContent = "";
-
-                });
-
-
-            document
-                .querySelectorAll(".invalid")
-                .forEach(element => {
-
-                    element.classList.remove(
-                        "invalid"
-                    );
-
-                });
-
-        }
-
-
-        catch (error) {
-
-            console.error(
-                "Submission failed:",
-                error
-            );
-
-
-            message.textContent =
-                "Submission failed. Please try again.";
-
-            message.style.color =
-                "#ff6b70";
-
-        }
-
-
-        finally {
-
-            submitBtn.disabled =
-                false;
-
-            submitBtn.textContent =
-                "Submit Registration";
-
-        }
-
-    }
-);
+document.addEventListener("DOMContentLoaded", init);
