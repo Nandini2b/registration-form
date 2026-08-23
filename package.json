@@ -1,0 +1,9 @@
+{
+  "name": "sfs-registration",
+  "version": "1.0.0",
+  "private": true,
+  "description": "SFS College student registration form",
+  "scripts": {
+    "start": "node server.js"
+  }
+}
