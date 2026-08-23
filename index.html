@@ -1,375 +1,350 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="SFS College Student Registration Form">
-    <title>SFS College - Student Registration</title>
+
+    <title>SFS College Form</title>
+
     <link rel="stylesheet" href="style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 </head>
 
 <body>
-    <div class="container" role="main">
-        <div class="registration-layout">
-            <aside class="campus-panel" aria-label="St. Francis de Sales College campus">
-                <img src="sfs.jpg" alt="St. Francis de Sales College campus building">
-                <div class="campus-caption">
-                    <span class="campus-mark">SFS</span>
-                    <p>St. Francis de Sales College</p>
-                    <small>Nagpur · Maharashtra</small>
-                </div>
-            </aside>
 
-            <div class="registration-side">
-                <header class="header">
-                    <p class="header-kicker">Admissions • Nagpur</p>
-                    <h1>St. Francis de Sales College</h1>
-                    <p class="subtitle">Student Information & Registration</p>
-                    <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"
-                        aria-label="Form completion progress">
-                        <div class="progress-fill" id="progressFill"></div>
-                    </div>
-                </header>
+    <!-- Animated background -->
+    <div class="bg-blobs">
+        <span class="blob blob1"></span>
+        <span class="blob blob2"></span>
+        <span class="blob blob3"></span>
+    </div>
 
-                <div class="form-content">
-            <form id="registrationForm" novalidate>
+    <div class="container">
 
-                <section class="section" aria-labelledby="studentDetailsTitle">
-                    <h2 class="section-title" id="studentDetailsTitle">Student Details</h2>
+        <div class="header">
 
-                    <div class="field-group">
-                        <div class="field-wrapper" id="nameWrapper">
-                            <label for="name">Full Name <span class="required" aria-hidden="true">*</span></label>
-                            <div class="input-wrapper">
-                                <input type="text" id="name" name="name" placeholder="Enter your full name" required
-                                    autocomplete="name" aria-describedby="nameHint">
-                                <div class="validation-icon" aria-hidden="true">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                                        <path d="M20 6L9 17l-5-5" />
-                                    </svg>
-                                </div>
-                            </div>
-                            <p class="field-hint" id="nameHint">As per official documents</p>
-                            <p class="field-error" id="nameError" aria-live="polite"></p>
-                        </div>
-                    </div>
+            <img
+                src="sfslogo.png"
+                alt="SFS College Logo"
+                class="logo"
+            >
 
-                    <div class="field-group">
-                        <div class="field-wrapper" id="emailWrapper">
-                            <label for="email">Email <span class="required" aria-hidden="true">*</span></label>
-                            <div class="input-wrapper">
-                                <input type="email" id="email" name="email" placeholder="Enter your email" required
-                                    autocomplete="email" aria-describedby="emailHint">
-                                <div class="validation-icon" aria-hidden="true">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                                        <path d="M20 6L9 17l-5-5" />
-                                    </svg>
-                                </div>
-                            </div>
-                            <p class="field-hint" id="emailHint">We'll send confirmation here</p>
-                            <p class="field-error" id="emailError" aria-live="polite"></p>
-                        </div>
-                    </div>
+            <h1>SFS COLLEGE FORM</h1>
 
-                    <div class="field-group">
-                        <div class="field-wrapper" id="mobileWrapper">
-                            <label for="mobile">Mobile No. <span class="required" aria-hidden="true">*</span></label>
-                            <div class="input-wrapper">
-                                <input type="tel" id="mobile" name="mobile" placeholder="Enter your mobile number"
-                                    required autocomplete="tel" pattern="[6-9]\d{9}" aria-describedby="mobileHint">
-                                <div class="validation-icon" aria-hidden="true">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                                        <path d="M20 6L9 17l-5-5" />
-                                    </svg>
-                                </div>
-                            </div>
-                            <p class="field-hint" id="mobileHint">10-digit Indian mobile number</p>
-                            <p class="field-error" id="mobileError" aria-live="polite"></p>
-                        </div>
-                    </div>
+            <p class="subtitle">
+                Student Information & Registration
+            </p>
 
-                    <div class="field-group">
-                        <div class="field-wrapper" id="apaarWrapper">
-                            <label for="apaar">APAAR ID (ABC ID) <span class="required" aria-hidden="true">*</span></label>
-                            <div class="input-wrapper">
-                                <input type="text" id="apaar" name="apaar" placeholder="Enter APAAR ID" required
-                                    autocomplete="off" aria-describedby="apaarHint">
-                                <div class="validation-icon" aria-hidden="true">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                                        <path d="M20 6L9 17l-5-5" />
-                                    </svg>
-                                </div>
-                            </div>
-                            <p class="field-hint" id="apaarHint">Academic Bank of Credits ID</p>
-                            <p class="field-error" id="apaarError" aria-live="polite"></p>
-                        </div>
-                    </div>
-
-                    <div class="field-group">
-                        <div class="field-wrapper" id="dobWrapper">
-                            <label for="dob">Date of Birth <span class="required" aria-hidden="true">*</span></label>
-                            <div class="input-wrapper">
-                                <input type="date" id="dob" name="dob" required aria-describedby="dobHint">
-                                <div class="validation-icon" aria-hidden="true">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                                        <path d="M20 6L9 17l-5-5" />
-                                    </svg>
-                                </div>
-                            </div>
-                            <p class="field-hint" id="dobHint">Enter your date of birth</p>
-                            <p class="field-error" id="dobError" aria-live="polite"></p>
-                        </div>
-                    </div>
-
-                    <div class="field-group">
-                        <div class="field-wrapper" id="aadhaarWrapper">
-                            <label for="aadhaar">Aadhaar ID <span class="required" aria-hidden="true">*</span></label>
-                            <div class="input-wrapper">
-                                <input type="text" id="aadhaar" name="aadhaar" placeholder="Enter Aadhaar ID" required
-                                    autocomplete="off" pattern="\d{12}" aria-describedby="aadhaarHint">
-                                <div class="validation-icon" aria-hidden="true">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                                        <path d="M20 6L9 17l-5-5" />
-                                    </svg>
-                                </div>
-                            </div>
-                            <p class="field-hint" id="aadhaarHint">12-digit Aadhaar number</p>
-                            <p class="field-error" id="aadhaarError" aria-live="polite"></p>
-                        </div>
-                    </div>
-
-                    <div class="field-group">
-                        <label for="photo">Student Photo <span class="required" aria-hidden="true">*</span></label>
-                        <div class="file-upload" id="fileUpload" role="region" aria-label="Photo upload">
-                            <input type="file" id="photo" name="photo" accept="image/*" required aria-describedby="photoHint">
-                            <div class="file-upload-label" id="fileUploadLabel">
-                                <svg class="file-upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                    stroke-width="1.5" aria-hidden="true">
-                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                                    <polyline points="17 8 12 3 7 8" />
-                                    <line x1="12" y1="3" x2="12" y2="15" />
-                                </svg>
-                                <span class="file-upload-text">Click or drag to upload photo</span>
-                                <p class="file-upload-hint">Passport size • JPG/PNG • Max 5MB</p>
-                            </div>
-                            <div class="photo-preview" id="photoPreview" aria-live="polite">
-                                <img id="previewImage" alt="Photo preview">
-                                <div class="photo-preview-actions">
-                                    <button type="button" class="btn-secondary" id="removePhoto"
-                                        aria-label="Remove photo">Remove</button>
-                                    <button type="button" class="btn-secondary" id="changePhoto"
-                                        aria-label="Change photo">Change</button>
-                                </div>
-                            </div>
-                        </div>
-                        <p class="field-hint" id="photoHint">Clear passport-size photograph</p>
-                        <p class="field-error" id="photoError" aria-live="polite"></p>
-                    </div>
-                </section>
-
-                <section class="section" aria-labelledby="academicTitle">
-                    <h2 class="section-title" id="academicTitle">Academic Details</h2>
-
-                    <div class="field-group">
-                        <div class="field-wrapper" id="streamWrapper">
-                            <label for="stream">Select Stream <span class="required" aria-hidden="true">*</span></label>
-                            <div class="input-wrapper">
-                                <select id="stream" name="stream" required aria-describedby="streamHint">
-                                    <option value="">-- Select Stream --</option>
-                                    <option value="Science">Science</option>
-                                    <option value="Arts">Arts</option>
-                                </select>
-                                <div class="validation-icon" aria-hidden="true">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                                        <path d="M20 6L9 17l-5-5" />
-                                    </svg>
-                                </div>
-                            </div>
-                            <p class="field-hint" id="streamHint">Choose your academic stream</p>
-                            <p class="field-error" id="streamError" aria-live="polite"></p>
-                        </div>
-                    </div>
-
-                    <div class="subject-section" id="subjectSection" aria-hidden="true" role="region"
-                        aria-labelledby="subjectTitle">
-                        <h2 class="section-title" id="subjectTitle">Subject Details</h2>
-
-                        <div class="field-group">
-                            <div class="field-wrapper" id="dsc1Wrapper">
-                                <label for="dsc1">DSC 1 <span class="required" aria-hidden="true">*</span></label>
-                                <div class="input-wrapper">
-                                    <select id="dsc1" name="dsc1" required aria-describedby="dsc1Hint">
-                                        <option value="">-- Select DSC 1 --</option>
-                                    </select>
-                                    <div class="validation-icon" aria-hidden="true">
-                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                                            <path d="M20 6L9 17l-5-5" />
-                                        </svg>
-                                    </div>
-                                </div>
-                                <p class="field-hint" id="dsc1Hint">First Discipline Specific Core</p>
-                                <p class="field-error" id="dsc1Error" aria-live="polite"></p>
-                            </div>
-                        </div>
-
-                        <div class="field-group">
-                            <div class="field-wrapper" id="dsc2Wrapper">
-                                <label for="dsc2">DSC 2 <span class="required" aria-hidden="true">*</span></label>
-                                <div class="input-wrapper">
-                                    <select id="dsc2" name="dsc2" required aria-describedby="dsc2Hint">
-                                        <option value="">-- Select DSC 2 --</option>
-                                    </select>
-                                    <div class="validation-icon" aria-hidden="true">
-                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                                            <path d="M20 6L9 17l-5-5" />
-                                        </svg>
-                                    </div>
-                                </div>
-                                <p class="field-hint" id="dsc2Hint">Second Discipline Specific Core</p>
-                                <p class="field-error" id="dsc2Error" aria-live="polite"></p>
-                            </div>
-                        </div>
-
-                        <div class="field-group">
-                            <div class="field-wrapper" id="dsc3Wrapper">
-                                <label for="dsc3">DSC 3 <span class="required" aria-hidden="true">*</span></label>
-                                <div class="input-wrapper">
-                                    <select id="dsc3" name="dsc3" required aria-describedby="dsc3Hint">
-                                        <option value="">-- Select DSC 3 --</option>
-                                    </select>
-                                    <div class="validation-icon" aria-hidden="true">
-                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                                            <path d="M20 6L9 17l-5-5" />
-                                        </svg>
-                                    </div>
-                                </div>
-                                <p class="field-hint" id="dsc3Hint">Third Discipline Specific Core</p>
-                                <p class="field-error" id="dsc3Error" aria-live="polite"></p>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <section class="section" aria-labelledby="nomineeTitle">
-                    <h2 class="section-title" id="nomineeTitle">Nominee Details</h2>
-
-                    <div class="field-group">
-                        <div class="field-wrapper" id="nomineeNameWrapper">
-                            <label for="nomineeName">Nominee Name <span class="required" aria-hidden="true">*</span></label>
-                            <div class="input-wrapper">
-                                <input type="text" id="nomineeName" name="nomineeName"
-                                    placeholder="Father / Mother / Brother / Sister" required autocomplete="off"
-                                    aria-describedby="nomineeNameHint">
-                                <div class="validation-icon" aria-hidden="true">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                                        <path d="M20 6L9 17l-5-5" />
-                                    </svg>
-                                </div>
-                            </div>
-                            <p class="field-hint" id="nomineeNameHint">Parent, sibling, or guardian</p>
-                            <p class="field-error" id="nomineeNameError" aria-live="polite"></p>
-                        </div>
-                    </div>
-
-                    <div class="field-group">
-                        <div class="field-wrapper" id="nomineeDobWrapper">
-                            <label for="nomineeDob">Nominee's Date of Birth <span class="required"
-                                    aria-hidden="true">*</span></label>
-                            <div class="input-wrapper">
-                                <input type="date" id="nomineeDob" name="nomineeDob" required
-                                    aria-describedby="nomineeDobHint">
-                                <div class="validation-icon" aria-hidden="true">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                                        <path d="M20 6L9 17l-5-5" />
-                                    </svg>
-                                </div>
-                            </div>
-                            <p class="field-hint" id="nomineeDobHint">Nominee's birth date</p>
-                            <p class="field-error" id="nomineeDobError" aria-live="polite"></p>
-                        </div>
-                    </div>
-
-                    <div class="field-group">
-                        <div class="field-wrapper" id="nomineeMobileWrapper">
-                            <label for="nomineeMobile">Nominee's Mobile No. <span class="required"
-                                    aria-hidden="true">*</span></label>
-                            <div class="input-wrapper">
-                                <input type="tel" id="nomineeMobile" name="nomineeMobile"
-                                    placeholder="Enter nominee mobile number" required autocomplete="tel"
-                                    pattern="[6-9]\d{9}" aria-describedby="nomineeMobileHint">
-                                <div class="validation-icon" aria-hidden="true">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                                        <path d="M20 6L9 17l-5-5" />
-                                    </svg>
-                                </div>
-                            </div>
-                            <p class="field-hint" id="nomineeMobileHint">10-digit Indian mobile number</p>
-                            <p class="field-error" id="nomineeMobileError" aria-live="polite"></p>
-                        </div>
-                    </div>
-
-                    <div class="field-group">
-                        <div class="field-wrapper" id="nomineeAadhaarWrapper">
-                            <label for="nomineeAadhaar">Nominee's Aadhaar No. <span class="required"
-                                    aria-hidden="true">*</span></label>
-                            <div class="input-wrapper">
-                                <input type="text" id="nomineeAadhaar" name="nomineeAadhaar"
-                                    placeholder="Enter nominee Aadhaar number" required autocomplete="off"
-                                    pattern="\d{12}" aria-describedby="nomineeAadhaarHint">
-                                <div class="validation-icon" aria-hidden="true">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                                        <path d="M20 6L9 17l-5-5" />
-                                    </svg>
-                                </div>
-                            </div>
-                            <p class="field-hint" id="nomineeAadhaarHint">12-digit Aadhaar number</p>
-                            <p class="field-error" id="nomineeAadhaarError" aria-live="polite"></p>
-                        </div>
-                    </div>
-                </section>
-
-                <div class="form-actions">
-                    <button type="submit" id="submitBtn" class="submit-btn" disabled>
-                        <span class="btn-text">
-                            Submit Registration
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="2.5" aria-hidden="true">
-                                <path d="M5 12h14M12 5l7 7-7 7" />
-                            </svg>
-                        </span>
-                        <div class="btn-loader" aria-hidden="true">
-                            <div class="spinner"></div>
-                        </div>
-                    </button>
-                </div>
-
-            </form>
-                </div>
-
-                <section class="success-panel" id="successPanel" aria-live="polite" aria-hidden="true">
-                    <div class="success-icon" aria-hidden="true">✓</div>
-                    <h2>Student Registration Form</h2>
-                    <p>Your form has been submitted successfully.</p>
-                    <button type="button" class="register-new-btn" id="registerNewStudent">
-                        Register New Student
-                    </button>
-                </section>
-            </div>
         </div>
+
+
+        <form id="registrationForm" novalidate>
+
+            <!-- STUDENT DETAILS -->
+
+            <h2>Student Details</h2>
+
+
+            <label for="name">
+                Full Name *
+            </label>
+
+            <input
+                type="text"
+                id="name"
+                name="name"
+                placeholder="Enter your full name"
+                required
+            >
+
+            <small class="err" data-for="name"></small>
+
+
+            <label for="email">
+                Email *
+            </label>
+
+            <input
+                type="email"
+                id="email"
+                name="email"
+                placeholder="Enter your email"
+                required
+            >
+
+            <small class="err" data-for="email"></small>
+
+
+            <label for="mobile">
+                Mobile No. *
+            </label>
+
+            <input
+                type="tel"
+                id="mobile"
+                name="mobile"
+                placeholder="10-digit mobile number"
+                maxlength="10"
+                inputmode="numeric"
+                required
+            >
+
+            <small class="err" data-for="mobile"></small>
+
+
+            <label for="rollNo">
+                Roll No. *
+            </label>
+
+            <input
+                type="text"
+                id="rollNo"
+                name="rollNo"
+                placeholder="Enter your roll number"
+                required
+            >
+
+            <small class="err" data-for="rollNo"></small>
+
+
+            <label for="apaar">
+                APAAR ID (ABC ID) *
+            </label>
+
+            <input
+                type="text"
+                id="apaar"
+                name="apaar"
+                placeholder="12-digit APAAR ID"
+                maxlength="12"
+                inputmode="numeric"
+                required
+            >
+
+            <small class="err" data-for="apaar"></small>
+
+
+            <label for="dob">
+                Date of Birth *
+            </label>
+
+            <input
+                type="date"
+                id="dob"
+                name="dob"
+                required
+            >
+
+            <small class="err" data-for="dob"></small>
+
+
+            <label for="aadhaar">
+                Aadhaar ID *
+            </label>
+
+            <input
+                type="text"
+                id="aadhaar"
+                name="aadhaar"
+                placeholder="12-digit Aadhaar"
+                maxlength="12"
+                inputmode="numeric"
+                required
+            >
+
+            <small class="err" data-for="aadhaar"></small>
+
+
+            <label for="photo">
+                Student Photo *
+            </label>
+
+            <input
+                type="file"
+                id="photo"
+                name="photo"
+                accept="image/*"
+                required
+            >
+
+            <p class="photo-note">
+                Passport-size photo. Auto-compressed to under 1MB.
+            </p>
+
+            <small class="err" data-for="photo"></small>
+
+
+            <!-- ACADEMIC DETAILS -->
+
+            <h2>Academic Details</h2>
+
+
+            <label for="stream">
+                Select Stream *
+            </label>
+
+            <select
+                id="stream"
+                name="stream"
+                required
+            >
+                <option value="">
+                    -- Select Stream --
+                </option>
+
+                <option value="Science">
+                    Science
+                </option>
+
+                <option value="Arts">
+                    Arts
+                </option>
+
+            </select>
+
+            <small class="err" data-for="stream"></small>
+
+
+            <!-- SUBJECT DETAILS -->
+
+            <div
+                id="subjectSection"
+                class="hidden"
+            >
+
+                <h2>Subject Details</h2>
+
+
+                <label for="dsc1">
+                    Subject 1 *
+                </label>
+
+                <select
+                    id="dsc1"
+                    name="dsc1"
+                    required
+                ></select>
+
+
+                <label for="dsc2">
+                    Subject 2 *
+                </label>
+
+                <select
+                    id="dsc2"
+                    name="dsc2"
+                    required
+                ></select>
+
+
+                <label for="dsc3">
+                    Subject 3 *
+                </label>
+
+                <select
+                    id="dsc3"
+                    name="dsc3"
+                    required
+                ></select>
+
+
+                <small
+                    class="err"
+                    data-for="subjects"
+                ></small>
+
+            </div>
+
+
+            <!-- NOMINEE DETAILS -->
+
+            <h2>Nominee Details</h2>
+
+
+            <label for="nomineeName">
+                Nominee Name *
+            </label>
+
+            <input
+                type="text"
+                id="nomineeName"
+                name="nomineeName"
+                placeholder="Father / Mother / Brother / Sister"
+                required
+            >
+
+            <small class="err" data-for="nomineeName"></small>
+
+
+            <label for="nomineeDob">
+                Nominee's Date of Birth *
+            </label>
+
+            <input
+                type="date"
+                id="nomineeDob"
+                name="nomineeDob"
+                required
+            >
+
+            <small class="err" data-for="nomineeDob"></small>
+
+
+            <label for="nomineeMobile">
+                Nominee's Mobile No. *
+            </label>
+
+            <input
+                type="tel"
+                id="nomineeMobile"
+                name="nomineeMobile"
+                placeholder="10-digit mobile"
+                maxlength="10"
+                inputmode="numeric"
+                required
+            >
+
+            <small
+                class="err"
+                data-for="nomineeMobile"
+            ></small>
+
+
+            <label for="nomineeAadhaar">
+                Nominee's Aadhaar No. *
+            </label>
+
+            <input
+                type="text"
+                id="nomineeAadhaar"
+                name="nomineeAadhaar"
+                placeholder="12-digit Aadhaar"
+                maxlength="12"
+                inputmode="numeric"
+                required
+            >
+
+            <small
+                class="err"
+                data-for="nomineeAadhaar"
+            ></small>
+
+
+            <button
+                type="submit"
+                id="submitBtn"
+            >
+                Submit Registration
+            </button>
+
+
+            <p id="message"></p>
+
+        </form>
+
     </div>
 
-    <div class="toast" id="toast" role="alert" aria-live="assertive" aria-hidden="true">
-        <svg class="toast-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-            aria-hidden="true">
-            <path d="M20 6L9 17l-5-5" />
-        </svg>
-        <span class="toast-message" id="toastMessage"></span>
-    </div>
 
     <script src="script.js"></script>
-</body>
 
+</body>
 </html>
