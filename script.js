@@ -9,15 +9,15 @@ const successPanel = document.getElementById("successPanel");
 const registerNewStudent = document.getElementById("registerNewStudent");
 
 const scienceSubjects = [
-    "B.Sc. Chemistry", "B.Sc. Biochemistry", "B.Sc. Biotechnology",
-    "B.Sc. Botany", "B.Sc. Zoology", "B.Sc. Physics",
-    "B.Sc. Mathematics", "B.Sc. Electronics", "B.Sc. Computer Science"
+    "Chemistry", "Biochemistry", "Biotechnology",
+    "Botany", "Zoology", "Physics",
+    "Mathematics", " Electronics", "Computer Science"
 ];
 
 const artsSubjects = [
-    "B.A. English Literature", "B.A. Hindi Literature", "B.A. Economics",
-    "B.A. History", "B.A. Philosophy", "B.A. Political Science",
-    "B.A. Physiology", "B.A. Sociology"
+    "English Literature", "Hindi Literature", "Economics",
+    "History", "Philosophy", "Political Science",
+    "Physiology", "Sociology"
 ];
 
 const stream = document.getElementById("stream");
